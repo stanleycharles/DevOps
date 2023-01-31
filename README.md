@@ -4,7 +4,10 @@ DevOps Methodology + Tools / CMD
 DevOps
  - DevOps Roadmap : https://roadmap.sh/devops
  - DevOps Mindmap : https://cloud-esprit-libre.ovh/s/z8AMZbqs6mxd5CH#mindmap
+ - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
  - Cheatsheets : https://sweworld.net
+ - Steph Robert's Blog : https://blog.stephane-robert.info
+ - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo/
 
 Git
  - Learn Git Branching : https://learngitbranching.js.org
