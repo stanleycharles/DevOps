@@ -1,4 +1,4 @@
-# DevOps
+s# DevOps
 DevOps Methodology + Tools / CMD
 
 DevOps
@@ -21,4 +21,11 @@ k8s
  
 Tools
  - YAMLlint : https://www.yamllint.com
+ 
+ Softwares
+  - Portainer : https://www.portainer.io
+  - Nomad :  https://www.nomadproject.io
+  - Lens : https://k8slens.dev
+  - k9s : https://k9scli.io
+  
 
