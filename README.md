@@ -1,4 +1,3 @@
-DevOps
 DevOps Methodology + Tools / CMD
 
 DevOps
