@@ -1,4 +1,4 @@
-s# DevOps
+DevOps
 DevOps Methodology + Tools / CMD
 
 DevOps
