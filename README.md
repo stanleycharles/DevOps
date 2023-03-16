@@ -24,5 +24,6 @@ Tools
   - Nomad :  https://www.nomadproject.io
   - Lens : https://k8slens.dev
   - k9s : https://k9scli.io
+  - k3s : https://k3s.io
   
 
