@@ -1,1 +1,598 @@
-leggoooo!
+----------- Installation Docker -----------
+
+
+source: https://docs.docker.com/engine/install/
+
+
+Install Docker On Ubuntu 
+
+
+# Update the apt package index and install packages to allow apt to use a repository over HTTPS.
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg lsb-release
+
+# Add Docker’s official GPG key.
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# set up the repository.
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install docker.
+sudo apt update && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+
+# Verify if docker is successfully installed.
+sudo docker run hello-world
+
+
+Install Docker On Debian 
+
+
+# Update the apt package index and install packages to allow apt to use a repository over HTTPS.
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg lsb-release
+
+# Add Docker’s official GPG key.
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+# Set up the repository.
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Install docker.
+sudo apt update && sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# Verify if docker is successfully installed.
+sudo docker run hello-world
+
+
+-----------
+
+
+Run Docker Commands Without Sudo
+
+
+# Create a docker group and add yourself to it,
+# so that you don't need sudo before your docker command.
+# Note that you'll need to log out and log in for the changes to take effect.
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+
+
+-------------
+
+
+Image Management 
+
+
+# Build an image.
+docker build -t <image-name>
+
+# Build an Image without using cache.
+docker build -t <image-name> . –no-cache
+
+# List local images.
+docker images
+
+# Create a docker image from a running container.
+docker commit <container-name-or-id> <image-name>
+
+# Delete a local image.
+docker rmi <image-name>
+
+# Remove all unused images.
+docker image prune
+
+# Push docker image to docker registry.
+# Image name has to be in the form of <docker-registry-address>/<docker-repo>[:<docker-tag>].
+# Examples are:
+# * docker-repo.local/my-image
+# * docker-repo.local/my-image:debug
+docker push <image-name>
+
+# Remove dangling images.
+docker images -qf dangling=true | xargs docker rmi
+
+
+Container Management 
+
+
+# Create a docker container.
+docker create <image-name>
+
+# Run a container from an image.
+docker run <image-name>
+
+# Run a container in interactive mode.
+docker run -it <image-name>
+
+# Run a container in the background.
+docker run -d <image-name>
+
+# Run a container with a port mapping.
+docker run -p <host-port>:<container-port> <image-name>
+
+# Start an existing container.
+docker start <container-id-or-name>
+
+# Restart a container.
+docker restart <container-id-or-name>
+
+# Pause a container.
+docker pause <container-id-or-name>
+
+# Unpause a container.
+docker unpause <container-id-or-name>
+
+# Wait until running container stops.
+docker wait <container-id-or-name>
+
+# Stop a container.
+docker stop <container-id-or-name>
+
+# Kill a container.
+docker kill <container-id-or-name>
+
+# Attach a container. (C-p C-q to detach)
+docker attach <container-id-or-name>
+
+# Rename a container.
+docker rename <container-id-or-name> <new-name>
+
+# Update a container.
+docker update [OPTIONS] <container-id-or-name>
+
+# Remove a stopped container.
+docker rm <container-id-or-name>
+
+# Follow the logs of a container.
+docker logs -f <container-id-or-name>
+
+# Inspect a running container.
+docker inspect <container-id-or-name>
+
+# List running containers.
+docker ps
+
+# List all containers.
+docker ps -a
+
+
+File Copy 
+
+
+# Copy files from host to container.
+docker cp <host-filepath> <container-id-or-name>:<container-filepath>
+
+# Copy files from container to host.
+docker cp <container-id-or-name>:<container-filepath> <host-filepath>
+
+# Export all files in container to host.
+docker export <container-id-or-name> -o <filename>
+
+
+Network Management 
+
+
+# Create a docker network.
+docker network create --subnet <subnet> --gateway <gateway> <docker-network-name>
+
+# Remove a docker network.
+docker network rm <docker-network-name>
+
+# List all docker networks.
+docker network ls
+
+# Inspect a docker network.
+docker network inspect <docker-network-name>
+
+# Connect a container with a docker network.
+docker network connect <docker-network-name> <container-id-or-name>
+
+# Disconnect a container with a docker network.
+docker network disconnect <docker-network-name> <container-id-or-name>
+
+
+Docker In Docker 
+
+
+# Run a docker container which maps the /var/run/docker.sock file,
+# so that you can run another docker container within this one.
+
+docker run -v /var/run/docker.sock:/var/run/docker.sock -it <image-name>
+
+
+Dockerfile Builder Commands 
+
+
+Command	Description
+FROM <image-name>	                             Docker base image name.
+MAINTAINER <email>	                             Maintainer’s email address.
+COPY <src-file-on-host> <dst-file-on-docker>   	     Copy files from host to docker image.
+RUN <command>	                                     Run a command when building the image.
+USER <username>	                                     Set the default user name.
+WORKDIR <dir>	                                     Set the default working directory.
+CMD <command>	                                     Start up default command which can be overridden by docker cli.
+ENTRYPOINT <command>	                             Start up default command which cannot be overridden by docker cli.
+ENV <env-name> <env-value>	                     Environment variables.
+
+
+Docker Config
+
+
+Insecure Docker Registry 
+
+# Add the following content to /etc/docker/daemon.json if you using an insecure docker registry.
+
+{
+    "insecure-registries" : ["<your-docker-register-server-ip-or-hostname>"]
+}
+
+
+
+---------- Docker-Compose Cheatsheet -----------
+
+
+Basics
+
+
+# Build or rebuild services
+docker compose build
+
+# Creates containers for a service.
+docker compose create
+
+# Start services
+docker compose start
+
+# Restart service containers
+docker compose restart
+
+# Create and start containers
+docker compose up
+
+# Run a one-off command on a service.
+docker compose run
+
+# Pause services
+docker compose pause
+
+# Unpause services
+docker compose unpause
+
+# Stop services
+docker compose stop
+
+# Removes stopped service containers
+docker compose rm
+
+# Stop and remove containers, networks
+docker compose down
+
+# Force stop service containers.
+docker compose kill
+
+# Execute a command in a running container.
+docker compose exec
+
+
+Check Status 
+
+
+# List running compose projects
+docker compose ls
+
+# List containers
+docker compose ps
+
+# Print the public port for a port binding.
+docker compose port
+
+# Receive real time events from containers.
+docker compose events
+
+# View output from containers
+docker compose logs
+
+# Display the running processes
+docker compose top
+
+
+Images
+
+
+# Pull service images
+docker compose pull
+
+# Push service images
+docker compose push
+
+# List images used by the created containers
+docker compose images
+
+
+File Operations 
+
+
+# Copy files/folders from a service container to the local filesystem
+docker compose cp <service>:<src-filepath> <dst-filepath>
+
+# Copy files/folders from the local filesystem to a service container.
+docker compose cp <src-filepath> <service>:<dst-filepath>
+
+
+Others 
+
+
+# Show the Docker Compose version information
+docker compose version
+
+# Converts the compose file to platform’s canonical format
+docker compose convert
+
+
+
+Docker Compose Config 
+An Basic Example 
+
+
+
+-
+version: '3.9'
+
+services:
+    hello-world:
+        image: hello-world:latest
+-
+
+
+Spec
+Build
+
+
+-
+services:
+  web:
+    # Build from Dockerfile
+    build: .
+
+    # Build arguments.
+    args:
+      APP_HOME: app
+
+    # Build from custom Dockerfile
+    build:
+      context: ./dir
+      dockerfile: Dockerfile.dev
+
+    # Build image.
+    image: debian
+    image: ubuntu
+    image: ubuntu:20.04
+-
+
+
+Network
+
+
+-
+services:
+  web:
+    # Set container network mode.
+    network_mode: "host"
+    network_mode: "none"
+    network_mode: "service:[service name]"
+
+    # Define the networks that service containers are attached to.
+    networks:
+      - some-network
+      - other-network
+
+    # Expose container ports.
+    ports:
+      - "3000"
+      - "3000-3005"
+      - "8000:8000"
+      - "9090-9091:8080-8081"
+      - "49100:22"
+      - "127.0.0.1:8001:8001"
+      - "127.0.0.1:5000-5010:5000-5010"
+      - "6060:6060/udp"
+
+    # Define dns server.
+    dns: 8.8.8.8
+
+    # Define custom DNS search domains to set on container network interface configuration.
+    dns_search: example.com
+
+    # List custom DNS options to be passed to the container’s DNS resolver.
+    dns_opt:
+      - use-vc
+      - no-tld-query
+
+    # Defines a network link to containers in another service.
+    links:
+      - db
+      - db:database
+      - redis
+-
+
+
+Environment Variable 
+
+
+-
+services:
+  web:
+    # Define environment variables.
+    environment:
+      RACK_ENV: development
+      SHOW: "true"
+      USER_INPUT:
+      COMPOSE_PROJECT_NAME: "foo"
+
+    # Define environment variables from file.
+    env_file: .env
+    env_file:
+      - ./a.env
+      - ./b.env
+-
+
+
+Commands
+
+
+-
+
+services:
+  web:
+    # Start up command, which overrides the image default command.
+    command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
+
+    # Start up command in the list form, which overrides the image default command.
+    entrypoint:
+      - php
+      - -d
+      - zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/xdebug.so
+      - -d
+      - memory_limit=-1
+      - vendor/bin/phpunit
+-
+
+
+Labels
+
+
+-
+
+services:
+  web:
+    # Container label meta data.
+    labels:
+      com.example.description: "Accounting webapp"
+      com.example.department: "Finance"
+      com.example.label-with-empty-value: ""
+-
+
+
+Logging
+
+
+-
+services:
+  web:
+    # Define logging.
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://192.168.0.42:123"
+-
+
+
+Dependencies
+
+
+-
+
+services:
+  web:
+    build: .
+    # Define startup and shutdown dependencies between services.
+    depends_on:
+      - db
+      - redis
+  redis:
+    image: redis
+  db:
+    image: postgres 
+
+
+
+
+
+
+
+
+(alt)
+podman
+containerid
+
+
+--------
+
+
+Dockerfile (build a local image into Docker - webhook git) 
+vs 
+Docker-compose (Run the image into a container - yaml)
+
+-
+
+Dockerfile exemple
+
+website (folder)
+   - index.html (file)
+   - script.js (file)
+   - style.css (file)
+
+Dockerfile
+  >> FROM nginx:latest
+     COPY ./website /usr/share/nginx/html/
+
+CMD = docker build -t my-nginx-img:latest .
+
+--
+
+
+Docker-Compose exemple (yaml)
+
+-
+version: '3.9'
+services:
+  my-nginx-service:
+    container_name: my-website
+    image: my-nginx-service:latest
+    cpus: 1.5
+    mem_limit: 2048m
+    ports:
+      - "8080:80"
+
+   my-other-service:                                (add-ons)
+    container_name: my-website
+    image: my-nginx-service:latest
+    cpus: 1.5
+    mem_limit: 2048m
+    ports:
+      - "8081:80"
+
+   tomcat-service:                                  (add-on 2)
+    container_name: java-web-app
+    image: tomcat:latest
+    cpus: 2.5
+    mem_limit: 4096m
+    ports:
+      - "8082:80"
+
+-
+
+website (folder)
+   - index.html (file)
+   - script.js (file)
+   - style.css (file)
+
+Dockerfile
+  >> FROM nginx:latest
+     COPY ./website /usr/share/nginx/html/
+
+docker-compose.yaml
+
+
+CMD = docker-compose up
+
+
+exo: Un docker-compose avec WP
+
+
++ voir cours AJC
