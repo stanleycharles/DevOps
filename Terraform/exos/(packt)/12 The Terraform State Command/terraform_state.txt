@@ -1,0 +1,15 @@
+# Getting a JSON output of all the resources contained in the state
+terraform show
+terraform show | grep -A 20 aws_vpc
+
+
+# Getting a list of all resource types and local names in the state
+terraform state list
+
+# Getting the attributes of a single resource
+terraform state show aws_vpc.main
+
+# Recreating a resource
+terraform plan -replace="aws_instance.my_vm" 
+terraform apply -replace="aws_instance.my_vm" -auto-approve
+
