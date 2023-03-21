@@ -15,8 +15,8 @@ git config core.editor <editor>
 
 Deposits
 
-git init --bare [nom_dÈpÙt]
-git clone [url] [nom_dÈpÙt]
+git init --bare [nom_d√©p√¥t]
+git clone [url] [nom_d√©p√¥t]
 git remote -v
 git remote add [remote_name] [remote_url]
 git remote rm [remote_name]
@@ -47,7 +47,7 @@ git log [-n] --oneline --decorate --graph --all
 git diff [tag|sha1] [tag|sha1]
 git show [tag|sha1]
 git checkout [tag|sha1|branche]
- git tag -n
+git tag -n
 git tag -d [nom_tag]
 
 
@@ -56,7 +56,7 @@ Change History
 git commit --amend
 git revert [tag|sha1|branche]
 git reset [--soft|--mixed|--hard] [tag|sha1|branch]
-git rebase ñi [tag|sha1|branch]
+git rebase ‚Äìi [tag|sha1|branch]
 
 
 Branch Work
@@ -90,8 +90,8 @@ git bisect [commit_bad] [commit_good]
 
 Git configuration
 
-git config --global user.name ìYour Nameî
-git config --global user.email ìyou@example.comî
+git config --global user.name ‚ÄúYour Name‚Äù
+git config --global user.email ‚Äúyou@example.com‚Äù
 git config --global color.ui auto
 
 
@@ -108,61 +108,61 @@ git add [file]
 git diff [file]
 git diff --staged [file]
 git checkout -- [file]
-$ git reset [file]
-$ git commit
-$ git rm [file]
-$ git stash
-$ git stash pop
-$ git stash drop
+git reset [file]
+git commit
+git rm [file]
+git stash
+git stash pop
+git stash drop
 
 
 Git branching model
 
 
-$ git branch [-a]
-$ git branch [branch_name]
-$ git checkout [-b][branch_name]
-$ git merge [from name]
-$ git branch -d [name]
+git branch [-a]
+git branch [branch_name]
+git checkout [-b][branch_name]
+git merge [from name]
+git branch -d [name]
 
 
 Review your work
 
 
-$ git log [-n count]
-$ git log --oneline --graph --decorate
-$ git log ref..
-$ git log ..ref
-$ git reflog 
+git log [-n count]
+git log --oneline --graph --decorate
+git log ref..
+git log ..ref
+git reflog 
 
 
 Tagging known commits
 
-$ git tag
-$ git tag [name] [commit sha]
-$ git tag -a [name] [commit sha]
-$ git tag -d [name]
+git tag
+git tag [name] [commit sha]
+git tag -a [name] [commit sha]
+git tag -d [name]
 
 
 Reverting changes
 
 
-$ git reset [--hard] [target reference]
-$ git revert [commit sha]
+git reset [--hard] [target reference]
+git revert [commit sha]
 
 
 Synchronizing repositories
 
-$ git fetch [remote]
-$ git fetch --prune [remote]
-$ git pull [remote]
-$ git push [--tags] [remote]
-$ git push -u [remote] [branch]
+git fetch [remote]
+git fetch --prune [remote]
+git pull [remote]
+git push [--tags] [remote]
+git push -u [remote] [branch]
 
 
 Ignoring Files
 
-$ cat .gitignore
+cat .gitignore
 /logs/*
 !logs/.gitkeep
 /tmp
