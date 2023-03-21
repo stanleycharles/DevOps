@@ -1,1 +1,1403 @@
-legggoooooooo!
+Installation
+
+source: https://docs.ansible.com/ansible/latest/installation_guide
+
+Redhat / CentOS              sudo yum install ansible
+
+Fedora / Rocky               sudo dnf install ansible
+ 
+Ubuntu / Debian              sudo apt-get install ansible
+
+PIP                          sudo pip install ansible
+			     sudo pip install --upgrade ansible
+
+                             sudo pip install ansible==2.4       Install Specific Version of Ansible using pip
+
+                             sudo yum install epel-release       Install pip if not present
+
+			     sudo yum install python-pip
+
+
+Inventory                    SSH connexion
+		             Agentless
+
+inventory path               /etc/ansible/hosts
+
+
+exemple 1:
+
+[mail]
+server3.company.com
+server4.company.com
+server1.company.com
+server2.company.com
+[mail]
+server3.company.com
+server4.company.com
+[db]
+server5.company.com
+server6.company.com
+[web]
+server7.company.com
+server8.company.com
+
+
+exemple 2:
+
+
+db_and_web_server ansible_connection=ssh ansible_ssh_pass=Passw0rd ansible_host=192.168.1.14
+
+or 
+
+db_and_web_server 
+ansible_connection=ssh 
+ansible_ssh_pass=Passw0rd 
+ansible_host=192.168.1.14
+
+
+exemple 3: 
+
+server1.company.com          ansible_connection=ssh            ansible_user=root
+server2.company.com	     ansible_connection=winrm          ansible_user=admin
+server3.company.com          ansible_connection=ssh            ansible_ssh_pass=P@#
+server4.company.com          ansible_connection=winrm
+
+localhost ansible_connection=localhost
+
+
+
+Inventory Parameters:                ansible_connection – ssh/winrm/localhost 
+                                     ansible_port – 22/5986
+                                     ansible_user – root/administrator
+                                     ansible_ssh_pass - Password
+                                     ansible_host=192.168.1.14
+
+Security:                            Ansible Vault
+
+
+Ansible Playbooks                    file: playbook.yaml
+
+
+exemple 1: Playbook
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks:
+   - name: Execute command ‘date’
+     command: date
+ 
+   - name: Execute script on server
+     script: test_script.sh
+
+   - name: Install httpd service
+     yum:
+      name: httpd
+      state: present
+
+   - name: Start web server
+     service:
+      name: httpd
+      state: started
+
+
+exemple 2: Playbook format
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks:
+         - name: Execute command ‘date’
+           command: date
+
+         - name: Execute script on server
+           script: test_script.sh
+
+-
+  name: Play 2
+  hosts: localhost
+  tasks:
+         - name: Install web service
+           yum:
+                  name: httpd
+                  state: present
+
+         - name: Start web server
+           service:
+                  name: httpd
+                  state: started
+
+exemple 3: Hosts
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks: 
+   - name: Execute command ‘date’ 
+     command: date
+
+   - name: Execute script on server
+     script: test_script.sh
+
+   - name: Install httpd service
+     yum:
+      name: httpd
+      state: present
+
+   - name: Start web server
+     service:
+      name: httpd
+      state: started
+
++
+
+localhost
+
+server1.company.com
+server2.company.com
+
+[mail]
+server3.company.com
+server4.company.com 
+[db]
+server5.company.com
+server6.company.com
+[web]
+server7.company.com
+server8.company.com
+
+
+exemple 4: 
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks:
+   - name: Execute command ‘date’
+     command: date
+
+   - name: Execute script on server
+     script: test_script.sh
+
+   - name: Install httpd service
+     yum:
+      name: httpd
+      state: present
+
+   - name: Start web server
+     service:
+      name: httpd
+      state: started
+
+
+Run : ansible-playbook playbook.yml
+help : ansible-playbook --help
+
+
+Ansible Modules
+
+
+exemple 1: command
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks:
+   - name: Execute command ‘date’
+     command: date
+
+   - name: Display resolv.conf contents
+     command: cat /etc/resolv.conf
+
+   - name: Display resolv.conf contents
+     command: cat resolv.conf chdir=/etc
+ 
+   - name: Display resolv.conf contents
+     command: mkdir /folder creates=/folder
+
+---- 
+ 
+   - name: Copy file from source to destination
+     copy: src src=//source_file source_file dest dest=/destination /destination
+
+
+exemple 2: script
+
+-
+  name: Play 1
+  hosts: localhost
+  tasks:
+   - name: Run a script on remote server
+     script: /some/local/script.sh -arg1 -arg2
+
+
+exemple 3: service                        
+
+Manage Services – Start, Stop, Restart
+
+-
+  name: Start Services in order
+  hosts: localhost
+  tasks: 
+   - name: Start the database service
+     service: name=postgresql state=started      *
+
+   - name: Start the httpd service
+     service: name=httpd state=started
+
+   - name: Start the nginx service
+     service:
+      name: nginx
+      state: started
+
+-
+  name: Start Services in order
+  hosts: localhost
+  tasks:
+   - name: Start the database service
+     service:                                    *
+      name: postgresql                           *
+      state: started                             *
+
+
+
+
+exemple 4: lineinfile
+
+Search for a line in a file and replace it or add it if it doesn’t exist
+
+nameserver 10.1.250.10
+
+---------
+
+/etc/resolv.conf
+nameserver 10.1.250.1
+nameserver 10.1.250.2
+
+---------
+
+playbook.yml 
+
+-
+  name: Add DNS server to resolv.conf
+  hosts: localhost
+  tasks:
+   - lineinfile:
+       path: /etc/resolv.conf
+       line: 'nameserver 10.1.250.10'
+
+-------
+
+/etc/resolv.conf
+nameserver 10.1.250.1
+nameserver 10.1.250.2
+nameserver 10.1.250.10
+
+--------
+
+script.sh
+#Sample script
+echo “nameserver 10.1.250.10” >> /etc/resolv.conf
+
+-------
+
+/etc/resolv.conf
+nameserver 10.1.250.1
+nameserver 10.1.250.2
+nameserver 10.1.250.10
+nameserver 10.1.250.10
+nameserver 10.1.250.10
+
+
+Ansible Variables
+
+
+exemple 1: variable
+
+------
+
+Inventory
+
+
+Web1  ansible_host=server1.company.com ansible_connection=ssh   ansible_shh_pass=P@ssW
+db    ansible_host=server2.company.com ansible_connection=winrm ansible_shh_pass=P@s
+Web2  ansible_host=server3.company.com ansible_connection=ssh   ansible_shh_pass=P@ssW
+
+-------
+
+Playbook.yml
+
+-
+  name: Add DNS server to resolv.conf
+  hosts: localhost
+  tasks:
+    - lineinfile:
+        path: /etc/resolv.conf
+        line: 'nameserver 10.1.250.10' 
+
+------
+
+variables
+
+variable1: value1
+variable2: value2
+
+
+------
+
+
+exemple 2: using variables
+
+-------
+
+Playbook.yml
+
+-
+  name: Add DNS server to resolv.conf
+  hosts: localhost
+   vars:
+     dns_server: 10.1.250.10
+
+   tasks:
+      - lineinfile:
+          path: /etc/resolv.conf
+          line: 'nameserver {{ dns_server }}’
+
+-
+  name: Set Firewall Configurations
+  hosts: web
+  tasks:
+  - firewalld: 
+      service: https
+      permanent: true 
+      state: enabled 
+
+  - firewalld: 
+      port: ‘{{ http_port }}’/tcp
+      permanent: true 
+      state: disabled 
+
+  - firewalld: 
+      port: ‘{{ snmp_port }}’/udp
+      permanent: true 
+      state: disabled 
+
+  - firewalld: 
+      source: ‘{{ inter_ip_range }}’/24
+      Zone: internal
+      state: enabled
+
+
+------
+
+
+
+#Sample Inventory File
+
+Web http_port=       snmp_port=       inter_ip_range=
+
+
+#Sample variable File – web.yml
+
+http_port: 8081
+snmp_port: 161-162
+inter_ip_range: 192.0.2.0
+
+
+--------
+
+
+{{ }}
+Jinja2 Templating
+v          source: ‘{{ inter_ip_range }}’
+x          source: {{ inter_ip_range }}
+V          source: SomeThing{{ inter_ip_range }}SomeThing
+
+
+
+Ansible Loops 
+
+
+exemple 1: Loops
+
+-
+  name: Create users 
+  hosts: localhost
+  tasks:
+   - user: name= “{{ item }}”          state=present
+   - user: name=joe                    state=present
+   - user: name=george                 state=present
+   - user: name=ravi                   state=present
+   - user: name=mani                   state=present
+   - user: name=kiran                  state=present
+   - user: name=jazlan                 state=present
+   - user: name=emaan                  state=present
+   - user: name=mazin                  state=present
+   - user: name=izaan                  state=present
+   - user: name=mike                   state=present
+   - user: name=menaal                 state=present
+   - user: name=shoeb                  state=present
+   - user: name=rani                   state=present
+
+
+exemple 2: Loops - Visualize
+
+
+-------
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name=‘{{ item }}’          state=present
+     loop:
+      - joe
+      - george
+      - ravi
+      - mani
+      - kiran
+      - jazlan
+      - emaan
+      - mazin
+      - izaan
+      - mike
+      - menaal 
+      - shoeb
+      - rani
+
++
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+  - var: item=
+    user: name= “{{ item }}”         state=present
+
+
+------
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name=‘{{ item }}’          state=present
+     loop:
+      - joe
+      - george
+      - ravi
+      - mani
+      - kiran
+      - jazlan
+      - emaan
+      - mazin
+      - izaan
+      - mike
+      - menaal
+      - shoeb
+      - rani
+ 
+
++
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+  - var: item=joe
+    user: name= “{{ item }}”           state=present
+  - var: item=george     
+    user: name= “{{ item }}”           state=present
+  - var: item=ravi
+    user: name= “{{ item }}”           state=present
+  - var: item=mani
+    user: name= “{{ item }}”           state=present
+  - var: item=kiran    
+    user: name= “{{ item }}”           state=present
+  - var: item=jazlan
+    user: name= “{{ item }}”           state=present
+  - var: item=emaan
+    user: name= “{{ item }}”           state=present
+  - var: item=mazin
+    user: name= “{{ item }}”           state=present
+  - var: item=izaan
+    user: name= “{{ item }}”           state=present
+
+
+------
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name= ‘{{ ???? }}’          state=present         uid= ‘{{ ? }}’
+     loop:
+      - name: joe
+        uid: 1010
+      - name: george
+        uid: 1011
+      - name: ravi
+        uid: 1012
+      - name: mani
+        uid: 1013
+      - name: kiran
+        uid: 1014
+      - name: jazlan
+        uid: 1015
+      - name: emaan
+        uid: 1016
+      - name: mazin
+        uid: 1017
+      - name: izaan
+        uid: 1018
+      - name: mike
+
+
++
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - var: item=joe
+     user: name= “{{ item }}” state=present
+   - var: item=george
+     user: name= “{{ item }}” state=present
+   - var: item=ravi
+     user: name= “{{ item }}” state=present
+   - var: item=mani
+     user: name= “{{ item }}” state=present
+   - var: item=kiran
+     user: name= “{{ item }}” state=present
+   - var: item=jazlan
+     user: name= “{{ item }}” state=present
+   - var: item=emaan
+     user: name= “{{ item }}” state=present
+   - var: item=mazin
+     user: name= “{{ item }}” state=present
+   - var: item=izaan
+     user: name= “{{ item }}” state=present
+
+
+
+------
+
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name= ‘{{ ???? }}’          state=present         uid= ‘{{ ? }}’
+     loop:
+      - name: joe
+        uid: 1010
+      - name: george
+        uid: 1011
+      - name: ravi
+        uid: 1012
+      - name: mani
+        uid: 1013
+      - name: kiran
+        uid: 1014
+      - name: jazlan
+        uid: 1015
+      - name: emaan
+        uid: 1016
+      - name: mazin
+        uid: 1017
+      - name: izaan
+        uid: 1018
+      - name: mike
+
+
++
+
+-
+   name: Create users
+   hosts: localhost
+   tasks:
+   - var:
+      item:
+
+
+     user: name= “{{ ???? }}” state=present uid=“{?}”
+
+   - var:
+      item:
+
+
+
+     user: name= “{{ ???? }}” state=present uid=“{?}”
+
+   - var:
+      item:
+
+
+     user: name= “{{ ???? }}” state=present uid=“{?}”
+
+
+   - var:
+      item:
+
+
+     user: name= “{{ ???? }}” state=present uid=“{?}”
+
+
+-----
+
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name= ‘{{ ???? }}’          state=present         uid= ‘{{ ? }}’
+     loop:
+       - name: joe
+         uid: 1010
+       - name: george
+         uid: 1011
+       - name: ravi
+         uid: 1012
+       - name: mani
+         uid: 1013
+       - name: kiran
+         uid: 1014
+       - name: jazlan
+         uid: 1015
+       - name: emaan
+         uid: 1016
+       - name: mazin
+         uid: 1017
+       - name: izaan
+         uid: 1018
+       - name: mike
+
+
++
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+  - var:
+     item:
+      name: joe
+      uid: 1010
+    user: name= “{{ ???? }}”           state=present           uid=“{?}”
+
+  - var:
+     item:
+      name: george
+       uid: 1011
+     user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+  - var:
+     item:
+      name: ravi
+      uid: 1012
+    user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+  - var:
+     item:
+      name: mani
+      uid: 1013
+    user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+
+
+-------
+
+
+
+-
+  name: Create users 
+  hosts: localhost
+  tasks:
+   - user: name= ‘{{ item.name }}’          state=present         uid= ‘{{ item.uid }}’
+     loop:
+      - name: joe                             { name: joe, uid: 1010 }
+        uid: 1010                           
+      - name: george                          { name: george, uid: 1011 }
+        uid: 1011
+      - name: ravi                            { name: ravi, uid: 1012 }
+        uid: 1012
+      - name: mani                            { name: mani, uid: 1013 }
+        uid: 1013
+      - name: kiran                           { name: kiran, uid: 1014 }
+        uid: 1014
+      - name: jazlan                          { name: jazlan, uid: 1015 }
+        uid: 1015
+      - name: emaan                           { name: emaan, uid: 1016 }
+        uid: 1016
+      - name: mazin                           { name: mazin, uid: 1017 }
+        uid: 1017
+      - name: izaan                           { name: izaan, uid: 1018 }
+        uid: 1018
+      - name: mike                            { name: mike, uid: 1019 }
+
+
++
+
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+  - var:
+     item:
+      name: joe
+      uid: 1010
+    user: name= “{{ ???? }}”           state=present           uid=“{?}”
+
+  - var:
+     item:
+      name: george
+      uid: 1011
+    user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+  - var:
+     item:
+      name: ravi
+      uid: 1012
+    user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+  - var:
+     item:
+      name: mani
+      uid: 1013
+    user: name= “{{ ???? }}”          state=present            uid=“{?}”
+
+
+
+exemple 3: With_*
+
+
+with_items
+with_file
+with_url
+with_mongodb
+with_dict
+with_etcd
+with_env
+with_filetree
+With_ini
+With_inventory_hostnames
+With_k8s
+With_manifold
+With_nested
+With_nios
+With_openshift
+With_password
+With_pipe
+With_rabbitmq
+With_redis
+With_sequence
+With_skydive
+With_subelements
+With_template
+With_together
+With_varnames
+
+
+-----------
+
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+   - user: name=‘{{ item }}’          state=present
+     with_items:
+      - joe 
+      - george
+      - ravi
+      - mani
+
+
++
+
+-
+  name: View Config Files
+  hosts: localhost
+  tasks:
+   - debug: var=item
+     with_file:
+       - “/etc/hosts”
+       - “/etc/resolv.conf
+       - “/etc/ntp.conf”
+
+
++
+
+
+-
+  name: Get from multiple URLs
+  hosts: localhost
+  tasks:
+   - debug: var=item
+     with_url:
+       - “https://site1.com/get-servers”
+       - “https://site2.com/get-servers”
+       - “https://site3.com/get-servers”
+
+
+
++
+
+
+-
+  name: Check multiple mongodbs
+  hosts: localhost
+  tasks:
+   - debug: msg=“DB={{ item.database }} PID={{ item.pid}}”
+     with_mongodb:
+      - database: dev
+        connection_string: “mongodb://dev.mongo/”
+      - database: prod
+        connection_string: “mongodb://prod.mongo/"
+
+
+------
+
+
+Ansible Conditionals
+
+
+example
+
+
+---
+- name: Install NGINX
+  hosts: debian_hosts
+  tasks:
+  - name: Install NGINX on Debian
+    apt:                                            *
+      name: nginx
+      state: present
+
++
+
+---
+- name: Install NGINX
+  hosts: redhat_hosts
+  tasks:
+  - name: Install NGINX on Red Hat
+    yum:                                            *
+      name: nginx
+      state: present
+
+
+
+exemple 1: Conditional - when
+
+
+---
+- name: Install NGINX
+  hosts: all
+  tasks:
+  - name: Install NGINX on Debian
+    apt:
+      name: nginx
+      state: present
+    when: ansible_os_family == “Debian”
+
+ - name: Install NGINX on Redhat
+   yum
+     name: nginx
+     state: present 
+   when: ansible_os_family == “RedHat”
+
+
+
+exemple 2: Operator - or
+
+
+---
+- name: Install NGINX
+  hosts: all
+  tasks:
+  - name: Install NGINX on Debian
+    apt:
+      name: nginx
+      state: present
+    when: ansible_os_family == “Debian”
+
+ - name: Install NGINX on Redhat
+   yum
+     name: nginx
+     state: present 
+   when: ansible_os_family == “RedHat” or  ansible_os_family == “SUSE”
+
+
+
+exemple 3: Operator - and
+
+
+---
+- name: Install NGINX
+  hosts: all
+  tasks:
+  - name: Install NGINX on Debian
+    apt:
+      name: nginx
+      state: present
+    when: ansible_os_family == “Debian” and ansible_distribution_version == “16.04”
+
+  - name: Install NGINX on Redhat
+    yum
+      name: nginx
+      state: present 
+    when: ansible_os_family == “RedHat” or  ansible_os_family == “SUSE”
+
+
+
+exemple 4: Conditionals in Loops
+
+
+---
+- name: Install NGINX
+  hosts: all
+  tasks:
+  - name: Install NGINX on Debian
+    apt:
+      name: nginx
+      state: present
+
+
+------
+
+
+
+---
+- name: Install Softwares
+  hosts: all
+  vars:
+    packages:
+       - name: nginx 
+         required: True
+       - name: mysql
+         required : True
+       - name: apache
+         required : False
+  tasks:
+  - name: Install “{{ item.name }}" on Debian
+    apt:
+      name: “{{ item.name }}"
+      state: present
+
+    loop: "{{ packages }}"
+
+
+-------
+
+
+
+---
+- name: Install Softwares
+  hosts: all
+  vars:
+    packages:
+       - name: nginx 
+         required: True
+       - name: mysql
+         required : True
+       - name: apache
+         required : False
+  tasks:
+  - name: Install “{{ item.name }}" on Debian
+    apt:
+      name: “{{ item.name }}"
+      state: present
+
+    loop: "{{ packages }}"
+
++-----
+
+
+- name: Install “{{ item.name }}” on Debian
+  vars:
+   item:
+    name: nginx
+    required: True
+  apt:
+    name: “{{ item.name }}”
+    state: present
+  when: item.required == True
+
+
++
+
+
+- name: Install “{{ item.name }}” on Debian
+  vars:
+   item:
+    name: mysql
+    required: True
+  apt:
+    name: “{{ item.name }}”
+    state: present
+  when: item.required == True
+
+
++
+
+
+- name: Install “{{ item.name }}” on Debian
+  vars:
+   item:
+    name: apache
+    required: False
+  apt:
+    name: “{{ item.name }}”
+    state: present
+  when: item.required == True
+
+
+------
+
+
+---
+- name: Install Softwares
+  hosts: all
+  vars:
+    packages:
+       - name: nginx 
+         required: True
+       - name: mysql
+         required : True
+       - name: apache
+         required : False
+  tasks:
+  - name: Install “{{ item.name }}" on Debian
+    apt:
+      name: “{{ item.name }}"
+      state: present
+
+    when: item.required == True
+
+    loop: "{{ packages }}"
+
+
+
+exemple 5: Conditionals & Register
+
+
+
+- name: Check status of a service and email if its down
+  hosts: localhost
+  tasks:
+   - command: service httpd status
+     register: result
+
+   - mail:
+      to: admin@company.com
+      subject: Service Alert
+      body: Httpd Service is down
+      when: result.stdout.find('down') != -1
+
+
+
+Ansible Roles
+
+
+
+mysql
+
+Installing Pre-requisites
+Installing mysql packages 
+Configuring mysql service 
+Configuring database and users
+
+nginx
+
+Installing Pre-requisites 
+Installing nginx packages 
+Configuring nginx service 
+Configuring custom web pages
+
+
+
+- name: Install and Configure MySQL
+  hosts: db-server
+  tasks: 
+     - name: Install Pre-Requisites
+       yum: name=pre-req-packages state=present
+
+     - name: Install MySQL Packages
+       yum: name=mysql state=present
+
+     - name: Start MySQL Service
+       service: name=mysql state=started
+
+     - name: Configure Database
+       mysql_db: name=db1 state=present
+
+
+** Re-Use **
+
+
+- name: Install and Configure MySQL 
+  hosts: db-server1……db-server100
+  roles:
+     - mysql
+
+
+** mysql-role **
+
+
+  tasks: 
+     - name: Install Pre-Requisites
+       yum: name=pre-req-packages state=present
+
+     - name: Install MySQL Packages
+       yum: name=mysql state=present
+
+     - name: Start MySQL Service
+       service: name=mysql state=started
+
+     - name: Configure Database
+       mysql_db: name=db1 state=present
+
+
+**Organize** 
+** Re-Use ** 
+
+** mysql-role **
+
+
++ tacks group
+
+
+
+  tasks: 
+     - name: Install Pre-Requisites
+       yum: name=pre-req-packages state=present
+
+     - name: Install MySQL Packages
+       yum: name=mysql state=present
+
+     - name: Start MySQL Service
+       service: name=mysql state=started
+
+     - name: Configure Database
+       mysql_db: name=db1 state=present
+
+
++ vars group
+
+
+mysql_packages:
+- mysql
+- mysql-server
+db_config:
+db_name: db1
+
+
++ defauts groups
+
+
+mysql_user_name: root
+mysql_user_password: root
+
+
++ handlers (empty)
++ templates (empty)
+
+
+
+**Organize** 
+** Re-Use ** 
+
+
+Share ** mysql-role ** = ansible-galaxy
+
+
+Linux files
+
+
+mysql
+   - readme.md (file)
+   - templates (dossier)
+   - tasks (dossier)
+   - handlers (dossier)
+   - vars (dossier)
+   - defaults (dossier)
+   - meta (dossier)
+
+my-playbook
+   - playbook.yml (file)
+   - roles (dossier)
+
+
+(playbook.yml)
+
+
+- name: Install and Configure MySQL
+  hosts: db-server
+  roles:
+     - mysql
+
+
+** CMD *** 
+
+ansible-galaxy init mysql
+  
+
+
+Modele 2
+
+
+
+my-playbook
+   - playbook.yml (file)
+   - roles (dossier)
+        - mysql (dossier)
+            - readme.md (file)
+            - templates (dossier)
+            - tasks (dossier)
+            - handlers (dossier)
+            - vars (dossier)
+            - defaults (dossier)
+            - meta (dossier)
+
+
+(playbook.yml)
+
+
+- name: Install and Configure MySQL
+  hosts: db-server
+  roles:
+     - mysql
+
+
+/etc/ansible/ansible.cfg
+roles_path = /etc/ansible/roles
+
+
+
+** CMD *** 
+
+ansible-galaxy init mysql
+
+
+-------
+
+
+Find Roles   =    Ansible Galaxy search mysql
+
+ansible-galaxy search mysql
+
+
+Use Role
+
+
+ansible-galaxy install geerlingguy.mysql
+
+- downloading role 'mysql', owned by geerlingguy
+- downloading role from https://github.com/geerlingguy/ansible-role-mysql/archive/2.9.5.tar.gz
+- extracting geerlingguy.mysql to /etc/ansible/roles/geerlingguy.mysql
+- geerlingguy.mysql (2.9.5) was installed successfully
+
+
+(playbook.yml)
+
+-
+  name: Install and Configure MySQL
+  hosts: db-server
+  roles:
+   - geerlingguy.mysql
+
+or
+
+-
+   name: Install and Configure MySQL
+   hosts: db-server
+   roles:
+     - role: geerlingguy.mysql
+       become: yes
+       vars:
+         mysql_user_name: db-user
+
+
+Use Role: Modele 3
+
+
+(Playbook-all-in-one.yml)   =    mysql only
+
+-
+  name: Install and Configure MySQL
+  hosts: db-and-webserver
+   roles:
+     - geerlingguy.mysql
+     - nginx
+
+
+(Playbook-distributed.yml)    =    mysql + nginx
+
+
+-
+  name: Install and Configure MySQL
+  hosts: db-server
+  roles:
+    - geerlingguy.mysql
+
+-
+  name: Install and Configure Web Server
+  hosts: web-server
+  roles:
+   - nginx
+
+
+List Roles
+
+
+$ ansible-galaxy list
+
+- geerlingguy.mysql
+- kodekloud1.mysql
+
+
+$ ansible-config dump | grep ROLE
+
+
+EFAULT_PRIVATE_ROLE_VARS(default) = False
+DEFAULT_ROLES_PATH(default) = [u'/root/.ansible/roles', u'/usr/share/ansible/roles', u'/etc/ansible/roles']
+GALAXY_ROLE_SKELETON(default) = None
+GALAXY_ROLE_SKELETON_IGNORE(default) = ['^.git$', '^.*/.git_keep$']s
+
+
+$ ansible-galaxy install geerlingguy.mysql –p ./roles
+
+
+
++ Voir videos AJC Ansible 
+
+
+
+
+
+
+
+
