@@ -1,1 +1,188 @@
-Leeeggggoooooo !
+Installation
+
+
+sudo apt-install git-all
+
+
+
+------- Cheat Sheet v1 (fr) -------
+
+Config
+
+git config user.name "[nom]"
+git config user.email [email]
+git config core.editor <editor>
+
+Deposits
+
+git init --bare [nom_dépôt]
+git clone [url] [nom_dépôt]
+git remote -v
+git remote add [remote_name] [remote_url]
+git remote rm [remote_name]
+git remote rename [old_name] [new_name]
+
+
+Synchro
+
+git fetch [remote]
+git pull [remote] [branch]
+git push [remote] [branch]
+
+Modify
+
+git status
+git checkout [fichier]
+git add --patch [fichiers]
+git reset HEAD [fichiers]
+git diff --staged [fichier]
+git commit --amend -m "[message]"
+git rm --cached [fichier]
+git mv [src] [dest]
+
+
+History
+
+git log [-n] --oneline --decorate --graph --all
+git diff [tag|sha1] [tag|sha1]
+git show [tag|sha1]
+git checkout [tag|sha1|branche]
+ git tag -n
+git tag -d [nom_tag]
+
+
+Change History
+
+git commit --amend
+git revert [tag|sha1|branche]
+git reset [--soft|--mixed|--hard] [tag|sha1|branch]
+git rebase –i [tag|sha1|branch]
+
+
+Branch Work
+
+git branch -u [remote/branch] [branch]
+git branch -r -a
+git branch [nom_branche]
+git checkout -b [nom_branche]
+git merge [autre_branche]
+git rebase [autre_branche]
+git cherry-pick [-x] [commit]
+
+
+Delay some modifications
+
+git stash save "[message]"
+git stash list
+git stash pop id
+git stash drop id
+
+Code Debug
+
+git blame -L [line_start],[line_stop] [file_name]
+git bisect [commit_bad] [commit_good]
+
+
+
+---------- Cheat Sheet v2 (eng) ------------
+
+
+
+Git configuration
+
+git config --global user.name “Your Name”
+git config --global user.email “you@example.com”
+git config --global color.ui auto
+
+
+Starting A Project
+
+git init [project name]
+git clone [project url]
+
+
+Day-To-Day Work
+
+git status
+git add [file]
+git diff [file]
+git diff --staged [file]
+git checkout -- [file]
+$ git reset [file]
+$ git commit
+$ git rm [file]
+$ git stash
+$ git stash pop
+$ git stash drop
+
+
+Git branching model
+
+
+$ git branch [-a]
+$ git branch [branch_name]
+$ git checkout [-b][branch_name]
+$ git merge [from name]
+$ git branch -d [name]
+
+
+Review your work
+
+
+$ git log [-n count]
+$ git log --oneline --graph --decorate
+$ git log ref..
+$ git log ..ref
+$ git reflog 
+
+
+Tagging known commits
+
+$ git tag
+$ git tag [name] [commit sha]
+$ git tag -a [name] [commit sha]
+$ git tag -d [name]
+
+
+Reverting changes
+
+
+$ git reset [--hard] [target reference]
+$ git revert [commit sha]
+
+
+Synchronizing repositories
+
+$ git fetch [remote]
+$ git fetch --prune [remote]
+$ git pull [remote]
+$ git push [--tags] [remote]
+$ git push -u [remote] [branch]
+
+
+Ignoring Files
+
+$ cat .gitignore
+/logs/*
+!logs/.gitkeep
+/tmp
+*.swp
+
+Verify the .gitignore file exists in your project and ignore certain type
+of files, such as all files in logs directory (excluding the .gitkeep file),
+whole tmp directory and all files *.swp. File ignoring will work for the
+directory (and children directories) where .gitignore file is placed.
+
+
+Commit        an object
+Branch        a reference to a commit; can have a tracked upstream
+Tag           a reference (standard) or an object (annotated)
+Head          a place where your working directory is now            
+
+
+
++ voir cours AJC
++ nana git
+
+
+
