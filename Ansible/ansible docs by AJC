@@ -1,0 +1,668 @@
+#####################################
+# Préparation  de l'environnement ansible         #
+#####################################
+
+Lab : 
+#Partie serveur
+serveur-ansible : 192.168.100.6
+  -openssh-server 
+                  # Ajoute les host(client)(node)
+                  -nano /etc/hosts
+                              192.168.100.3      node1
+                              192.168.100.15    node2
+                              192.168.100.16    node3
+                   # Tunnel SSH - 3072 bits
+                   -ssh-keygen 
+                   -ssh-keygen -t rsa -b 3072 -C "node1"
+                   # Copie de la clée vers le clients
+                   -ssh-copy-id root@192.168.100.3
+                                                @192.168.100.15
+                                                @192.168.100.16
+#Partie node
+node1 : 192.168.100.3
+                # Configuration du nom du serveur 
+                nano /etc/hostname
+                node 1
+                hostenamectl set-hostname node1
+               # Installation de ssh 
+               openssh-server : PermitRootLogin yes
+
+node2: 192.168.100.15
+                 openssh-server :root ok
+                 hostenamectl set-hostname node 1
+node3: 192.168.100.16
+                openssh-server : root ok
+                hostenamectl set-hostname node 1
+
+
+######################################
+# Installation d'ansible sur le serveur-ansible        #
+######################################
+nano /etc/apt
+# ansible
+deb http://ppa.launchpad.net/ansible/ansible/ubuntu focal main
+# ajout de la clée  gpg
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+# mises à jours + installation 
+sudo apt update
+sudo apt install ansible
+# création de la clée + envoi sur un client 
+ssh-keygen    
+ssh-copy-id  root@192.168.1.2
+
+###################################
+# Configuration des clients                               #
+###################################
+# Arborescences
+répertoire : /etc/ansible
+f:ansible.cfg       : configuration de bases
+f:host              : clients(node)
+d:roles             : configuration avancé
+
+#  fonction
+100 serveurs
+besoin : mises à jour sql
+groupe: databases
+identifiant : nom []
+                   ip 192.168.100.1 a 50
+1 -[databases]  -- 50serveurs
+192.168.100.1
+
+2 -[site web]     --50serveurs
+192.168.200.2
+
+filtre node : webserver
+all : tout les clients ----> host
+                                        [webserver]
+                                         192.168.100.1
+                                        [db]
+                                         192.168.200.1
+categorie : 
+ansible webserver -m ping -u root
+
+
+################################
+# Inventaires avancé           #
+################################
+
+[client]
+192.168.100.11
+[webserver]
+192.168.200.11
+[svrcluster]
+192.168.10.11
+
+[client]
+techinal.lc
+192.168.1.1
+
+[bouclelocal]
+localhost ansible_connection=local
+127.0.0.1 ansible_connection=local
+
+[client-test]
+cl1 ansible_host=192.168.100.1 ansible_port=22
+
+[client:children]
+group1
+
+nano user.yml
+host-vars:
+  hosts :
+    serv1 :
+      ansible_hosts: 192.168.100.11
+      ansible_user: root
+
+    cl1 :
+      ansible_hosts: 191.168.1.1
+      ansible_port : 80
+      ansible_ssh  :
+      ansible_connection : ssh
+
+@all:
+  |--@cl1:
+  |  |--192.168.100.11
+  |--@cl2:
+  |  |--192.168.100.12
+  |--@ungrouped:
+
+########################
+# PLaybook les bases   #
+########################
+#Mises à jours
+ansible all -m setup -a "filter=ansible_distribution"
+ansible localhost -i host -m setup -a "filter=ansible_distribution"
+ansible all -m setup -a "filter=ansible_distribution"
+ansible all -m apt -a 'update_cache=yes' -b
+
+command playbook :
+   ansible-playbook --version 
+   ansible-playbook --list-tasks playbook.yml
+   ansible-pkaybook --syntax-check playbook.yml
+   ansible-playbook --private-key /../ playbook.yml 
+   ansible-playbook --step --diff --check playbook.yml
+
+
+# Création des playbook (besoins )
+ansible cl1,cl2 -m apt -a "name=apache state=present"
+ansible cl1,cl2 -m shell -a "apt update -y"
+ansible cl1,cl2 -m user -a "name=yassine state=present"
+ansible cl1,cl2 -m group -a "name=test state=present"
+ansible cl1,cl2 -m get_url -a "url=git dest="
+ansible -i inv all -m lineinfile -a "path=/home/ansible/testfile line='Hbonjour' state=present"
+
+
+# Syntaxe de base 
+
+
+
+# Installation d'un serveur apache *
+# v1
+
+---                                         # norme langage 
+  - name : template apache2                 # Nom de la template 
+    hosts: cl1                              # Client ou noeud ou all
+    tasks:                                  # Tache réalisé
+      - name: installation apache2          # Nom de la tache réalisé 
+        apt:                                # Module utilisé 
+          name: apache2                     # Nom du paquet apache2
+          state: latest                     # Mise à jour cache 
+
+
+
+
+# Installation d'un serveur apache + mysql + dns 
+# Avec gestion des services ( restart )
+# v2 
+---
+  - name : template apache2
+    hosts: cl1
+    tasks:
+      - name: installation apache2
+        apt:
+          name: apache2
+          state: latest
+
+      - name: installation php
+        ansible.builtin.apt:
+          name: mariadb-server 
+          state: latest
+
+      - name: installation dns
+        apt:
+          name: bind9
+          state: latest
+
+      - name: tache suivante1
+        service:
+          name: apache2
+          state: restarted 
+
+      - name: tache suivante2
+        service:
+          name: mysql
+          state: restarted 
+
+      - name: tache suivante3
+        service:
+          name: bind9
+          state: restarted 
+      - name: controle 
+        shell:
+          "systemctl status apache2; systemctl status bind9"
+
+# Installation d'un serveur apache + mysql + dns 
+# Avec gestion des services ( restart )
+# v3.0
+# present            : installation simple du logiciel -> depot 
+# latest             : derniere version mises à jour du logiciel avant installation
+# absent             : supprime le logiciel apache 
+# update_cache : yes : mises à jours des dépots avant installation   
+---
+  - name : template apache2
+    hosts: cl1
+    tasks:
+      - name: installation  pakages
+        package:
+          name:
+            - apache2 
+            - mariadb-server 
+            - bind9
+            - bind9utils
+            - chrony
+            - openssh-server 
+            - htop
+            - iptables
+          state: present
+        
+# Installation d'un serveur apache + mysql + dns 
+# Avec gestion des services ( restart )
+#
+# v3.1
+---
+  - name : template apache2
+    hosts: cl1
+    tasks:
+      - name: installation  pakages
+        apt:
+          name: ['apache2','mariadb-server','openssh-server ','chrony','bind9']
+          update_cache: yes
+          state: present
+---
+  - name : template apache2
+    hosts: cl1
+    tasks:
+      - name: installation  pakages
+        package:
+          name: "{{ item }}"
+          state: latest
+        with_item:
+          - apache2
+          - mariadb-server 
+          - php 
+            
+
+# Installation du logiciel netdata 
+#curl -Ss 'https://raw.githubusercontent.com/netdata/netdata/master/packaging/installer/install-required-packages."sh' >/tmp/install-required-packages.sh && bash /tmp/install-required-packages.sh -i netdata 
+apt-get install zlib1g-dev uuid-dev libuv1-dev liblz4-dev libssl-dev
+libelf-dev libmnl-dev libprotobuf-dev protobuf-compiler gcc g++ make git
+autoconf autoconf-archive autogen automake pkg-config curl python cmake
+
+# Lien git de netdata
+git clone https://github.com/netdata/netdata.git
+
+# Mecanisme d'installation  
+-apt
+-update_cache
+-git
+ repo: 'https://github.com/netdata/netdata.git'
+ dest: '/etc/'
+ clone: yes
+ update: yes
+-shell: ./netdata.sh
+ args:
+   chdir/dir:
+             //
+-handler
+ service
+  name:
+  state:
+# Installation de netdata 
+---
+  - name :   installation netdata 
+    hosts: all
+    remote_user: root 
+    tasks:
+      - name: installation des prerequis 
+        apt: 
+          name: ['lib1g-dev', 'uuid-dev', 'libuv1-dev', 'liblz4-dev', 'libssl-dev', 'libelf-dev','libmnl-dev', 'libprotobuf-dev', 'protobuf-compiler', 'gcc', 'g++', 'make', 'git']
+autoconf autoconf-archive autogen automake pkg-config curl python cmake        update_cache: yes
+        state: present 
+      - name: clone du repetoire netdata 
+        git:
+          repo: 'https://github.com/netdata/netdata.git'
+          dest: //
+          clone: yes
+      - name : execution scriot 
+        shell: 
+          args:
+            chdir: //
+
+---
+  - name :   installation netdata 
+    hosts: all
+    tasks:
+      
+      - name: creation des répertoires admin et finance 
+        file: path={{item}} state=diretory 
+        with_items:
+          - '/etc/admin'
+          - '/etc/finance'
+# np
+      - name: création de fichier 
+        file: "{{ item }}"
+        state: touch
+        with_items: 
+          - '/etc/admin'
+          - '/etc/finance'
+
+      - name: copie 
+        copy:
+          src: /etc/admin/test.txt
+          dest: /etc/finance/test.txt
+      
+      - name:
+        package:
+          name: "{{ item }}"
+          state:latest
+        with_items:
+          - apache2
+          - gantt
+
+      - name: creation utilisateur
+        ansible.builtin.user:
+          name: yassinee
+          group: sudo
+          shell: /bin/bash
+          createhome: yes
+          home: /home/yassinee
+        
+        ansible.builtin.user:
+          name:  pierre
+          group: sudo
+          shell: /bin/bash
+          createhome: yes
+          home: /home/pierre
+
+      - name:
+        openssh_keypair:
+          path: /home/yassinee
+          type: rsa
+          size: 3072
+          state: present
+          force: no
+        run_once: yes
+        delegate_to: root/localhost 
+
+       - name:
+        openssh_keypair:
+          path: /home/yassinee
+          type: rsa
+          size: 3072
+          state: present
+          force: no
+        run_once: yes
+        delegate_to: root/localhost     
+
+
+
+# Installation simple logiciel 
+-----------------------------------------------------------------------------------------------
+# simple template apache2
+---
+  - name: template  apache2
+    hosts: node1
+    tasks:
+      - name: installation apache2
+        apt:
+             name: apache2
+             state: latest 
+      - name: seconde tache
+        service:
+             name: apache2
+             state: started
+
+# installation deux paquet
+- name: 
+  hosts:
+    - mariadb
+  tasks:
+  - name: 
+    package:
+      name:
+        - mariadb-server
+        - mariadb-client
+      state: present
+
+# installation précise logiciel netdata
+
+-----------------------------------------------------------------------------------------------
+#
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: test
+     apt:
+       name: ['git', 'zlib1g-dev', 'uuid-dev', 'libmnl-dev', 'pkg-config', 'curl', 'gcc', 'make', 'autoconf', 'autoconf-archive', 'autogen', 'automa' ,
+'python-mysqldb', 'lm-sensors', 'python-psycopg2', 'netcat', 'nodejs', 'libuv1-dev', 'zlib1g-dev']
+       update_cache: yes
+       state: present
+   - name:
+     git:
+       repo: 'https://github.com/netdata.git'
+       dest: /opt/netdata/
+       clone: yes
+       update: yes
+   - name: to run the shell script
+     shell: bash netdata-installer.sh --dont-wait --libs-are-really-here
+     args:
+       chdir: /opt/netdata
+  handlers:
+   - name: to restart netdata
+     service:
+       name: netdata
+       state: restarted
+#
+
+# Affichage dossier              
+---
+  - name: commande
+    hosts: all
+    tasks:
+      - name: command ls
+        command: 'ls /var/log '
+      - name:
+        command: 'free'
+      - name:
+        command: 'df -h'
+      - name:
+        command: 'free -m'
+-----------------------------------------------------------------------------------------------
+# copie fichier
+---
+- name: template script
+  hosts: all
+  remote_user: root
+  tasks:
+    - name: Copie 
+      copy: 
+        src: "/etc/setup.sh" 
+        dest: "/tmp"
+    
+    - name: Execute the script
+      shell:
+        "chmod a+x /tmp/setup.sh &&  /tmp/setup.sh 120"  
+
+      register: scrout
+
+    - name: tache
+      shell :
+        " ls -lrt /tmp"
+-----------------------------------------------------------------------------------------------
+# Création utilisateur et groupes
+---
+- name: creation users
+  hosts: all
+  remote_user: root
+  tasks:
+  # ajout yassine 
+    - name: creation utilisateur yassine
+      ansible.builtin.user:
+        name: yassine
+        comment: ajout de yassine 
+        uid: 1077
+        group: sudo
+        shell: /bin/bash
+        createhome: yes        # Defaults to yes
+        home: /home/yassine    # Defaults to /home/<username>
+
+   ---
+   - name: mon premier playbook
+  hosts: all
+  remote_user: vagrant
+  tasks:
+  - name: generate SSH key
+    openssh_keypair:
+      path: /tmp/xavki
+      type: rsa
+      size: 4096
+      state: present
+      force: no
+    run_once: yes
+    delegate_to: localhost 
+''
+  # Adding the user qa_editor in the editor group 
+    - name: Ajout "editor" 
+      group:
+        name: editor
+        gid: 2212
+        state: present
+
+
+-----------------------------------------------------------------------------------------------
+#Gestion des services
+---
+  - name: patche serveur
+    hosts: client
+    tasks:
+      - name: patch sur le serveur
+        become: yes
+        become_user: root
+        tags: Patch
+        shell: "apt update -y && apt upgrade -y && reboot"
+-----------------------------------------------------------
+#Gestion des services
+---
+  - name: template  apache2
+    hosts: node1
+    tasks:
+      - name: seconde tache
+        service:
+             name: apache2
+             state: started
+-----------------------------------------------------------------------------------------------
+# Création d'un fichier
+---
+- hosts: all
+  tasks:
+  - name: fichier 
+    file:
+      path: "/etc/test"
+      state: touch
+-----------------------------------------------------------------------------------------------
+#Ajout de text dans le fichier
+---
+  - name: Ajouter des commentaires en début de fichier
+    hosts: all
+    become: true
+    tasks:
+      - name: Ajouter un commentaire
+        lineinfile:
+          dest: /etc/hosts
+          insertbefore: BOF
+          line: '# Mon commentaire'
+
+#Ajout d'un port check_mode: yes
+---
+  - name: com
+    hosts: all
+    become: true
+    tasks:
+      - name: comm
+        lineinfile:
+          dest: /etc/ssh/sshd_config
+          regexp: '^Port'
+          line: 'Port 111'
+
+
+-----------------------------------------------------------------------------------------------          
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------ITEM
+
+#Création dossier + fichier
+---
+- hosts: all
+  tasks:
+  - name: plusieurs fichier
+    file: 
+      path: "{{ item }}"
+      state: touch
+    with_items:
+    - yas.t
+    - yas.t
+    - yas.t
+-----
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: creation d' un dossier
+    file: path={{item}} state=directory
+    with_items:
+    - '/etc/configureyassine'
+    - '/etc/configureadmin'
+    - '/etc/configure'
+
+'-------------------------------------------------------''
+
+# Installation plusieur logiciel via item
+----na
+container_image: debian
+command_to_run: sleep 1h
+______________________________________________________________________________________________
+---
+- hosts: localhost
+  become: true
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+    - name: 
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: 
+      shell: 'curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg'
+
+    - name: 
+      shell: 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian bullseye stable" | tee /etc/apt/sources.list.d/docker.list'
+
+    - name: 
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: 
+      pip:
+        name: docker
+
+    - name: 
+      docker_image:
+        name: "{{ container_image }}"
+        source: pull
+
+    - name: 
+      docker_container:
+        name: "{{ container_name }}{{ item }}"
+        image: "{{ container_image }}"
+        command: "{{ command_to_run }}"
+        state: present
+      with_sequence: count={{ no_containers }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
