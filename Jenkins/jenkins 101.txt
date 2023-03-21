@@ -1,1 +1,17 @@
-Leggggoool ! 
+-------------- Installation ----------------
+
+
+source: https://www.jenkins.io/doc/book/installing/
+
+
+(alt)
+Dagger
+Gitlab CICD
+Github Actions
+
+
+----------------------------------------
+
+
+Voir cours AJC + 20 DevOps projects
+

@@ -1,0 +1,106 @@
+[Dockerfile]
+
+
+FROM httpd:latest
+COPY index.html /usr/local/apache2/htdocs (centos path)
+
+
+-------------------------------------------------
+
+[index.html]
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>The Matrix</title>
+    </head>
+    <body>
+Hello World!
+    </body>
+</html>
+
+
+-------------------------------------------------
+
+
+[Jenkins Script]
+
+
+node {  
+    stage('git') 
+    { 
+        git branch: 'main', credentialsId: 'gitstanley', url: 'git@gitlab.com:stanleycold/testjenkins.git'
+    }
+    stage('build') 
+    { 
+        image = docker.build("stanleycharles/webapp","-f Dockerfile .")
+    }
+    stage('test') 
+    { 
+        cont = image.run("-p 10000-10010:80")
+    }
+    stage('push image to the dockerhub registery') 
+    { 
+        docker.withRegistery('', 'dockerhub') {
+	image.push()
+	}
+    }
+    stage('nettoyage')
+    {
+        cont.stop()
+    }
+}
+
+
+_________________________________________________________
+
+Lancer build ==
+
+VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVValidated !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+-------------------------------------------------------------------------
+
+RESOLVED _ Creation credentials DOCKER !!!!!!!!! added 'dockerhub' 
+
+
+__________________________________________
+
+J'ai lance le build et le page fonctionne.
+
+
+Par contre sur le pipeline. la derniere etape en push etait en rouge/failed.
+
+
+...
+
+
+denied: requested access to the resource is denied
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: script returned exit code 1
+Finished: FAILURE
+
+
+J'ai passe une bonne aprem a debugger. et j'avais vu que Matthieu avait le meme probleme. Resolved.
+je ferai l'exo que vous avez envoye demain.
+
+
+Stanley
+
+
+
+
+
+
+
+
+
+
+

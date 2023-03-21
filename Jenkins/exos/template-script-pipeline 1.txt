@@ -1,0 +1,48 @@
+node {
+    stage("git") {
+        git branch: 'main', credentialsId: 'gitgui', url: 'https://gitlab.com/Guicotine/java_test.git'
+    }
+    stage('Build java') { 
+        withMaven(jdk: 'jdk8', maven: 'maven') {
+            sh "mvn clean verify"
+        }
+             
+    }
+    stage('Docker build') { 
+        image = docker.build("guicotine/maven-gui:V${env.BUILD_NUMBER}","-f Dockerfile .")
+	    sh 'docker images'
+	    print(image)
+    }
+    stage('test') {
+        container = image.run("-p 10000-10010:80")
+        po = container.port(80)     
+        po2 = po.split(":")[1]      
+        ip = "${JENKINS_URL}"                             
+        ip2 = ip.split("8080")[0]  
+        variable = 1 
+
+        try 
+        {                                                 
+            variable = input message: "il faut tester sur l'adresse ${ip2}${po2} ", ok: 'Next'
+        } 
+        finally 
+        {
+            container.stop()
+
+            if (variable == 1){
+                sh 'docker rmi guicotine/maven-gui:V${env.BUILD_NUMBER}'
+                sh 'docker images '
+            }
+        }
+
+    }
+	stage('push images guicotine'){
+        docker.withRegistry( '', 'logdockerhub' ) { 
+            image.push()
+	    }
+    }
+    stage('Clear images'){
+    	sh "docker rmi -f guicotine/maven-gui:V${env.BUILD_NUMBER}"
+    	sh "docker images"
+    }
+}
