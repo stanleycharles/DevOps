@@ -11,7 +11,7 @@ Install Docker On Ubuntu
 sudo apt-get update
 sudo apt-get install ca-certificates curl gnupg lsb-release
 
-# Add Docker’s official GPG key.
+# Add Dockerâ€™s official GPG key.
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
@@ -33,7 +33,7 @@ Install Docker On Debian
 sudo apt-get update
 sudo apt-get install ca-certificates curl gnupg lsb-release
 
-# Add Docker’s official GPG key.
+# Add Dockerâ€™s official GPG key.
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
@@ -72,7 +72,7 @@ Image Management
 docker build -t <image-name>
 
 # Build an Image without using cache.
-docker build -t <image-name> . –no-cache
+docker build -t <image-name> . â€“no-cache
 
 # List local images.
 docker images
@@ -210,7 +210,7 @@ Dockerfile Builder Commands
 
 Command	Description
 FROM <image-name>	                             Docker base image name.
-MAINTAINER <email>	                             Maintainer’s email address.
+MAINTAINER <email>	                             Maintainerâ€™s email address.
 COPY <src-file-on-host> <dst-file-on-docker>   	     Copy files from host to docker image.
 RUN <command>	                                     Run a command when building the image.
 USER <username>	                                     Set the default user name.
@@ -330,7 +330,7 @@ Others
 # Show the Docker Compose version information
 docker compose version
 
-# Converts the compose file to platform’s canonical format
+# Converts the compose file to platformâ€™s canonical format
 docker compose convert
 
 
@@ -408,7 +408,7 @@ services:
     # Define custom DNS search domains to set on container network interface configuration.
     dns_search: example.com
 
-    # List custom DNS options to be passed to the container’s DNS resolver.
+    # List custom DNS options to be passed to the containerâ€™s DNS resolver.
     dns_opt:
       - use-vc
       - no-tld-query
@@ -542,6 +542,8 @@ Dockerfile
      COPY ./website /usr/share/nginx/html/
 
 CMD = docker build -t my-nginx-img:latest .
+
+- > See the image on Dockerhub or Docker Desktop (win)
 
 --
 
