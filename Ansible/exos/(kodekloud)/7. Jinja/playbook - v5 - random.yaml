@@ -1,0 +1,8 @@
+-
+  name: Generate random file name
+  hosts: localhost
+  tasks:
+  - name: Install dependencies
+    file:
+      path: /tmp/random_file"{{ 1000 | random }}"
+      state: touch

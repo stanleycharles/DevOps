@@ -1,0 +1,10 @@
+controller ansible_connection=local
+kubemaster     ansible_host=192.168.56.101 ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
+kubenode1      ansible_host=192.168.56.102 ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
+kubenode2      ansible_host=192.168.56.103 ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
+
+[kubenodes]
+kubenode[1:2]
+
+[kubemaster]
+kubemaster

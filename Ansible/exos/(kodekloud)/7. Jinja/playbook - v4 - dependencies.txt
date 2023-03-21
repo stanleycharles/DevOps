@@ -1,0 +1,18 @@
+-
+  name: Install Dependencies
+  hosts: localhost
+  vars:
+    web_dependencies:
+         - python
+         - python-setuptools
+         - python-dev
+         - build-essential
+         - python-pip
+         - python-mysqldb
+    sql_dependencies:
+         - python
+         - python-mysqldb
+  tasks:
+  - name: Install dependencies
+    apt: name='{{ item }}' state=present
+    with_items: '{{ web_dependencies | union(sql_dependencies) }}'

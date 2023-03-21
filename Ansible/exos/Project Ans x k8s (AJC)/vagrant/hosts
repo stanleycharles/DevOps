@@ -1,0 +1,10 @@
+[kubemaster]
+master ansible_host=192.168.56.101 ansible_connection=ssh ansible_user=root
+
+[kubenodes]
+kubenode1 ansible_host=192.168.56.102 ansible_connection=ssh ansible_user=root
+kubenode2 ansible_host=192.168.56.103 ansible_connection=ssh ansible_user=root
+
+[K8s:children]
+kubemaster
+kubenodes

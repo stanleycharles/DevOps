@@ -1,0 +1,12 @@
+-
+  name: Test Jinja2 Templating
+  hosts: localhost
+  vars:
+    array_of_numbers:
+      - 12
+      - 34
+      - 06
+      - 34
+  tasks:
+  - debug:
+      msg: 'Lowest = {{ array_of_numbers | min }}'

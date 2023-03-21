@@ -1,0 +1,80 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.define "master" do |kub|
+    kub.vm.box = "bento/ubuntu-18.04"
+    kub.vm.hostname = 'master'
+    kub.ssh.insert_key = false
+    kub.vm.provision "docker"
+    kub.vm.box_url = "bento/ubuntu-18.04"
+
+    kub.vm.network :private_network, ip: "192.168.56.101"
+    kub.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 2048]
+      v.customize ["modifyvm", :id, "--name", "master"]
+      v.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+  end
+  config.vm.define "kubenode1" do |kubnode1|
+    kubnode1.vm.box = "bento/ubuntu-18.04"
+    kubnode1.vm.hostname = 'kubenode1'
+    kubnode1.vm.provision "docker"
+    kubnode1.vm.box_url = "bento/ubuntu-18.04"
+    kubnode1.ssh.insert_key = false
+    kubnode1.vm.network :private_network, ip: "192.168.56.102"
+
+    kubnode1.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 2048]
+      v.customize ["modifyvm", :id, "--name", "kubenode1"]
+      v.customize ["modifyvm", :id, "--cpus", "2"]
+    end
+  end
+  config.vm.define "kubenode2" do |kubnode2|
+    kubnode2.vm.box = "bento/ubuntu-18.04"
+    kubnode2.vm.hostname = 'kubenode2'
+    kubnode2.vm.provision "docker"
+    kubnode2.vm.box_url = "bento/ubuntu-18.04"
+    kubnode2.ssh.insert_key = false
+    kubnode2.vm.network :private_network, ip: "192.168.56.103"
+
+    kubnode2.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 2048]
+      v.customize ["modifyvm", :id, "--name", "kubenode2"]
+      v.customize ["modifyvm", :id, "--cpus", "2"]
+    end
+  end
+  config.vm.define "ansible" do |ans|
+    ans.vm.box = "bento/ubuntu-18.04"
+    ans.vm.hostname = 'ansible'
+    ans.vm.box_url = "bento/ubuntu-18.04"
+    ans.ssh.insert_key = false
+    ans.vm.network :private_network, ip: "192.168.56.105"
+
+    ans.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 2048]
+      v.customize ["modifyvm", :id, "--name", "ansible"]
+      v.customize ["modifyvm", :id, "--cpus", "1"]
+    end
+    ans.vm.provision "shell",
+      inline: "sudo apt-add-repository ppa:ansible/ansible; sudo apt -y update; sudo apt -y install ansible"
+    ans.vm.provision "file", source: "C:/Users/matth/source/repos/ajc-devops/scripts/vagrant/hosts", destination: "/tmp/hosts"
+    ans.vm.provision "file", source: "C:/Users/matth/source/repos/ajc-devops/scripts/vagrant/ansible.cfg", destination: "/tmp/ansible.cfg"
+    ans.vm.provision "file", source: "C:/Users/matth/source/repos/ajc-devops/scripts/vagrant/inventory.txt", destination: "/tmp/inventory.txt"
+    ans.vm.provision "file", source: "C:/Users/matth/source/repos/ajc-devops/scripts/vagrant/playbook.yml", destination: "/tmp/playbook.yml"
+    ans.vm.provision "shell",
+      inline: "mv /tmp/hosts /etc/ansible/hosts; mv /tmp/ansible.cfg /etc/ansible/ansible.cfg; mv /tmp/inventory.txt /home/vagrant/inventory.txt; mv /tmp/playbook.yml /etc/ansible/playbook.yml;"
+    ans.vm.provision "shell",
+      inline: "ssh-keygen -t rsa -N '' -f /home/vagrant/.ssh/id_rsa; sudo chmod 707 /home/vagrant/.ssh/id_rsa; sudo chmod 707 /home/vagrant/.ssh/id_rsa.pub; sshpass -p 'vagrant' ssh-copy-id -i /home/vagrant/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.56.101; sshpass -p 'vagrant' ssh-copy-id -i /home/vagrant/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.56.102; sshpass -p 'vagrant' ssh-copy-id -i /home/vagrant/.ssh/id_rsa.pub -o StrictHostKeyChecking=no vagrant@192.168.56.103 ; ssh-keyscan -H 192.168.56.101 192.168.56.102 192.168.56.103 >> ~/.ssh/known_hosts;"
+    ans.vm.provision "ansible_local" do |ansible|
+      ansible.playbook = "/etc/ansible/playbook.yml"
+      ansible.install        = true
+      ansible.limit          = "all"
+      ansible.inventory_path = "/home/vagrant/inventory.txt"
+    end
+  end
+end

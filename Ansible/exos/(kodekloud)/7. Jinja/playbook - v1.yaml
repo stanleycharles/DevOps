@@ -1,0 +1,9 @@
+-
+  name: Test Jinja2 Templating
+  hosts: localhost
+  vars:
+    first_name: james
+    last_name: bond
+  tasks:
+  - debug:
+      msg: 'The name is {{ last_name }}! {{ first_name }} {{ last_name }}!'

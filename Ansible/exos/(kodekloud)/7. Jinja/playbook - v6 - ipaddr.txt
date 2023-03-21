@@ -1,0 +1,9 @@
+-
+  name: Test valid IP Address
+  hosts: localhost
+  vars:
+    ip_address: 192.168.1.6
+  tasks:
+  - name: Test IP Address
+    debug:
+      msg: IP Address = {{ ip_address | ipaddr }}
