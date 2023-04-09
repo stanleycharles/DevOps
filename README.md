@@ -20,6 +20,7 @@ k8s
 Tools
  - YAMLlint : https://www.yamllint.com
  - OperatorHub : https://operatorhub.io
+ - Minio : https://min.io
  
  Softwares
   - Portainer : https://www.portainer.io
