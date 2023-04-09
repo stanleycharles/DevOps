@@ -23,6 +23,15 @@ Tools
  - Minio : https://min.io (stockage multi-cloud s3)
  - Atlas : https://docs.mapbox.com/atlas/guides/kubernetes (Metadata gestion)
  - Keycloak : https://www.keycloak.org (IAM security)
+ - Kong : https://konghq.com/solutions/build-on-kubernetes
+ - Fluentbit : https://fluentbit.io (logs)
+ - Opensearch : https://opensearch.org
+ - RKE2 : https://docs.rke2.io
+
+Cni
+ - Calico : https://docs.tigera.io/calico/latest/about
+ - Cillium : https://cilium.io
+ - Flannel : https://github.com/flannel-io/flannel
  
  Softwares
   - Portainer : https://www.portainer.io
@@ -30,5 +39,6 @@ Tools
   - Lens : https://k8slens.dev
   - k9s : https://k9scli.io
   - k3s : https://k3s.io
+  - Flatcar : https://www.flatcar.org
   
 
