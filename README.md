@@ -21,6 +21,8 @@ Tools
  - YAMLlint : https://www.yamllint.com
  - OperatorHub : https://operatorhub.io
  - Minio : https://min.io
+ - Atlas : https://docs.mapbox.com/atlas/guides/kubernetes
+ - Keycloak : https://www.keycloak.org
  
  Softwares
   - Portainer : https://www.portainer.io
