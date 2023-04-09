@@ -20,9 +20,9 @@ k8s
 Tools
  - YAMLlint : https://www.yamllint.com
  - OperatorHub : https://operatorhub.io
- - Minio : https://min.io
- - Atlas : https://docs.mapbox.com/atlas/guides/kubernetes
- - Keycloak : https://www.keycloak.org
+ - Minio : https://min.io (stockage multi-cloud s3)
+ - Atlas : https://docs.mapbox.com/atlas/guides/kubernetes (Metadata gestion)
+ - Keycloak : https://www.keycloak.org (IAM security)
  
  Softwares
   - Portainer : https://www.portainer.io
