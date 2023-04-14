@@ -9,6 +9,9 @@ DevOps
 Git
  - Learn Git Branching : https://learngitbranching.js.org
  
+Ansible
+ - Ansible templates : https://github.com/geerlingguy/ansible-for-devops
+ 
 Docker
  - The Ultimate Docker Cheatsheet : https://dockerlabs.collabnix.com/docker/cheatsheet
  
