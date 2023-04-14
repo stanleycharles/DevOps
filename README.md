@@ -13,6 +13,7 @@ Docker
  - The Ultimate Docker Cheatsheet : https://dockerlabs.collabnix.com/docker/cheatsheet
  
 k8s
+ - k8s Official Cheatlist : https://kubernetes.io/docs/reference/kubectl/cheatsheet
  - k8s The Hard Way : https://github.com/kelseyhightower/kubernetes-the-hard-way (GCP practice)
  - Microservices Demo : https://github.com/GoogleCloudPlatform/microservices-demo (GCP practice)
  - Play with k8s : http://labs.play-with-k8s.com (Labs)
