@@ -1,4 +1,5 @@
 DevOps
+ - Ultimate Guide to becoming a DevOps Engineer : https://www.contino.io/insights/devops-engineer-guide
  - DevOps Roadmap : https://roadmap.sh/devops / https://github.com/milanm/DevOps-Roadmap
  - DevOps Mindmap : https://cloud-esprit-libre.ovh/s/z8AMZbqs6mxd5CH#mindmap 
  - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
