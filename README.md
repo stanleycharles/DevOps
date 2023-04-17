@@ -8,7 +8,10 @@ DevOps
 
 Git
  - Learn Git Branching : https://learngitbranching.js.org
- 
+
+Dev
+ - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo
+
 Ansible
  - Ansible templates : https://github.com/geerlingguy/ansible-for-devops
  
@@ -36,9 +39,6 @@ Cni
  - Calico : https://docs.tigera.io/calico/latest/about
  - Cillium : https://cilium.io
  - Flannel : https://github.com/flannel-io/flannel
- 
-Dev
- - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo/
 
  Softwares
   - Portainer : https://www.portainer.io
