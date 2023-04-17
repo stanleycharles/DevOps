@@ -5,7 +5,6 @@ DevOps
  - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
- - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo/
 
 Git
  - Learn Git Branching : https://learngitbranching.js.org
@@ -38,6 +37,9 @@ Cni
  - Cillium : https://cilium.io
  - Flannel : https://github.com/flannel-io/flannel
  
+Dev
+ - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo/
+
  Softwares
   - Portainer : https://www.portainer.io
   - Nomad :  https://www.nomadproject.io
