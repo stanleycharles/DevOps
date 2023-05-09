@@ -27,7 +27,7 @@ k8s
  
 Tools
  - YAMLlint : https://www.yamllint.com
- - Artifact hub : https://artifacthub.io (k8s repository)
+ - Artifact hub : https://artifacthub.io (k8s/helm repository)
  - OperatorHub : https://operatorhub.io
  - Minio : https://min.io (stockage multi-cloud s3)
  - Atlas : https://docs.mapbox.com/atlas/guides/kubernetes (Metadata gestion)
