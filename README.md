@@ -13,6 +13,8 @@ Git
 
 Dev
  - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo
+ - Exercism : https://exercism.org
+ - Codingame : https://www.codingame.com
 
 Ansible
  - Ansible templates : https://github.com/geerlingguy/ansible-for-devops
