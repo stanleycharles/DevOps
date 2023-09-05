@@ -18,6 +18,7 @@ Dev
 
 VMware
   - Vmadmin : https://www.vmadmin.co.uk
+  - Tanzu : https://tanzu.vmware.com/kubernetes-operations
 
 Ansible
  - Ansible templates : https://github.com/geerlingguy/ansible-for-devops
