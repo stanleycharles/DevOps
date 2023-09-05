@@ -16,6 +16,9 @@ Dev
  - Exercism : https://exercism.org
  - Codingame : https://www.codingame.com
 
+VMware
+  - Vmadmin : https://www.vmadmin.co.uk
+
 Ansible
  - Ansible templates : https://github.com/geerlingguy/ansible-for-devops
  
