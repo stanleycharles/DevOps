@@ -5,6 +5,7 @@ DevOps
  - IT Roadmap : https://reallyconfused.co
  - DevOps Tools Periodic Label : https://digital.ai/learn/devops-periodic-table
  - Continuous Delivery Landscape : https://landscape.cd.foundation
+ - CNCF Cloud Native Interactive Landscape : https://landscape.cncf.io
  - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
