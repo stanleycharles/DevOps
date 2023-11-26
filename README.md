@@ -4,6 +4,7 @@ DevOps
  - DevOps Mindmap : https://cloud-esprit-libre.ovh/s/z8AMZbqs6mxd5CH#mindmap
  - IT Roadmap : https://reallyconfused.co
  - DevOps Tools Periodic Label : https://digital.ai/learn/devops-periodic-table
+ - Continuous Delivery Landscape : https://landscape.cd.foundation
  - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
