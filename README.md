@@ -17,6 +17,7 @@ Dev
  - Algorithmique et programmation pour non-matheux : http://cours.pise.info/algo
  - Exercism : https://exercism.org
  - Codingame : https://www.codingame.com
+ - The Twelve Factors App : https://12factor.net
 
 VMware
   - Vmadmin : https://www.vmadmin.co.uk
