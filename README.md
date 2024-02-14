@@ -10,6 +10,9 @@ DevOps
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
 
+Lx
+ - Linux Commands : https://xmind.app/m/WwtB/
+
 Git
  - Learn Git Branching : https://learngitbranching.js.org
 
