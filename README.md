@@ -9,6 +9,7 @@ DevOps
  - Cursus DevOps : https://supports.uptime-formation.fr/00-presentation-environnement
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
+ - DevSecOps Culture : https://security-mindset.fr
 
 Lx
  - Linux Commands : https://xmind.app/m/WwtB/
