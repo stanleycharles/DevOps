@@ -37,6 +37,8 @@ k8s
  - k8s The Hard Way : https://github.com/kelseyhightower/kubernetes-the-hard-way (GCP practice)
  - Microservices Demo : https://github.com/GoogleCloudPlatform/microservices-demo (GCP practice)
  - Play with k8s : http://labs.play-with-k8s.com (Labs)
+ - Killer.sh : https://killer.sh (Labs)
+ - Killercoda : https://killercoda.com (Labs)
  
 Tools
  - YAMLlint : https://www.yamllint.com
