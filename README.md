@@ -1,5 +1,6 @@
 DevOps
  - Ultimate Guide to becoming a DevOps Engineer : https://www.contino.io/insights/devops-engineer-guide
+ - What is DevOps ? : https://blog.cockpitio.com/devops/what-is-devops
  - DevOps Roadmap : https://roadmap.sh/devops / https://github.com/milanm/DevOps-Roadmap
  - DevOps Mindmap : https://cloud-esprit-libre.ovh/s/z8AMZbqs6mxd5CH#mindmap
  - IT Roadmap : https://reallyconfused.co
@@ -10,7 +11,7 @@ DevOps
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
  - DevSecOps Culture : https://security-mindset.fr
- - What is DevOps ? : https://blog.cockpitio.com/devops/what-is-devops (article)
+
 
 Lx
  - Linux Commands : https://xmind.app/m/WwtB/
