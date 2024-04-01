@@ -10,6 +10,7 @@ DevOps
  - Cheatsheets : https://sweworld.net
  - Steph Robert's Blog : https://blog.stephane-robert.info
  - DevSecOps Culture : https://security-mindset.fr
+ - What is DevOps ? : https://blog.cockpitio.com/devops/what-is-devops (article)
 
 Lx
  - Linux Commands : https://xmind.app/m/WwtB/
@@ -65,6 +66,9 @@ Cni
   - k9s : https://k9scli.io
   - k3s : https://k3s.io
   - Flatcar : https://www.flatcar.org
+
+Ressources
+  - k8s on ProxMox : https://blog.stonegarden.dev/articles/2024/03/proxmox-k8s-with-cilium
 
 ---
   
