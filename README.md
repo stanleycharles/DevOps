@@ -27,6 +27,9 @@ Dev
  - Codewars: https://www.codewars.com
  - The Twelve Factors App : https://12factor.net
 
+API
+ - FreePublicApis : https://www.freepublicapis.com
+
 VMware
   - Vmadmin : https://www.vmadmin.co.uk
   - Tanzu : https://tanzu.vmware.com/kubernetes-operations
